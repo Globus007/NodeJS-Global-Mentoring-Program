@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "NodeJS Global Mentoring Program 2021",
   "scripts": {
-    "task1": "nodemon task1.js"
+    "task1": "nodemon task1.js",
+    "task2": "nodemon task2.js"
   },
   "repository": {
     "type": "git",
@@ -15,6 +16,7 @@
     "nodemon": "^2.0.13"
   },
   "dependencies": {
+    "csvtojson": "^2.0.10",
     "process": "^0.11.10"
   }
 }
