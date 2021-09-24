@@ -2,7 +2,9 @@
   "name": "nodejs-global-mentoring-program",
   "version": "1.0.0",
   "description": "NodeJS Global Mentoring Program 2021",
-  "scripts": {},
+  "scripts": {
+    "task1": "nodemon task1.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Globus007/NodeJS-Global-Mentoring-Program.git"
@@ -11,5 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.13"
+  },
+  "dependencies": {
+    "process": "^0.11.10"
   }
 }
