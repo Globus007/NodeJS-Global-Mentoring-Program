@@ -4,7 +4,9 @@
   "description": "NodeJS Global Mentoring Program 2021",
   "scripts": {
     "task1": "nodemon task1.js",
-    "task2": "nodemon task2.js"
+    "task2": "nodemon task2.js",
+    "task3": "nodemon --exec npm run babel-node -- task3.js",
+    "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'"
   },
   "repository": {
     "type": "git",
@@ -13,7 +15,11 @@
   "author": "Globus007",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.13"
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
+    "nodemon": "^2.0.13",
+    "pretier": "0.0.1"
   },
   "dependencies": {
     "csvtojson": "^2.0.10",
