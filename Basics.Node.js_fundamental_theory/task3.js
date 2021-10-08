@@ -10,7 +10,11 @@ const inputPath = path.join(__dirname, INPUT_FILENAME);
 const outputPath = path.join(__dirname, OUTPUT_FILENAME);
 
 pipeline(
-  csv({ delimiter: ';' }).fromFile(inputPath).subscribe((json) => json),
+  csv({ delimiter: ';' })
+    .fromFile(inputPath)
+    .subscribe((json) => {
+      delete json['Amount'];
+    }),
   fs.createWriteStream(outputPath),
   (err) => {
     if (err) {
