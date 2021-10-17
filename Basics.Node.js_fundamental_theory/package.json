@@ -1,0 +1,28 @@
+{
+  "name": "nodejs-global-mentoring-program",
+  "version": "1.0.0",
+  "description": "NodeJS Global Mentoring Program 2021",
+  "scripts": {
+    "task1": "nodemon task1.js",
+    "task2": "nodemon task2.js",
+    "task3": "nodemon --exec npm run babel-node -- task3.js",
+    "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Globus007/NodeJS-Global-Mentoring-Program.git"
+  },
+  "author": "Globus007",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/node": "^7.15.4",
+    "@babel/preset-env": "^7.15.6",
+    "nodemon": "^2.0.13",
+    "prettier": "^2.4.1"
+  },
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "process": "^0.11.10"
+  }
+}
