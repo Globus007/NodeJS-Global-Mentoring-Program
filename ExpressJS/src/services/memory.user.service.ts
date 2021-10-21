@@ -9,7 +9,6 @@ class MemoryUserService implements UserService {
   }
 
   getAllUsers(): User[] {
-    console.log(this.users);
     return this.users.filter((user) => !user.isDeleted);
   }
 
@@ -17,12 +16,13 @@ class MemoryUserService implements UserService {
     return this.users.find((user) => user.id === id && !user.isDeleted);
   }
 
-  getAutoSuggestUsers(loginSubstring: string, limit: number): User[] {
-    return this.users
+  getAutoSuggestUsers(loginSubstring: string, limit?: number): User[] {
+    const filteredUsers = this.users
       .filter((user) => !user.isDeleted)
       .sort((a, b) => a.login.localeCompare(b.login))
-      .filter((user) => user.login.includes(loginSubstring))
-      .slice(0, limit);
+      .filter((user) => user.login.includes(loginSubstring));
+
+    return limit !== undefined ? filteredUsers.slice(0, limit) : filteredUsers;
   }
 
   createUser(user: User): User {
@@ -32,7 +32,7 @@ class MemoryUserService implements UserService {
 
   deleteUser(id: string): boolean {
     const user = this.getUserById(id);
-    if (user !== null) {
+    if (user) {
       this.getUserById(id).isDeleted = true;
       return true;
     }
@@ -40,12 +40,12 @@ class MemoryUserService implements UserService {
   }
 
   updateUser(id: string, fieldsToUpdate: Partial<User>): User {
-    let user = this.getUserById(id);
-    if (user !== null) {
-      user = { ...user, ...fieldsToUpdate };
-      return user;
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index < 0) {
+      return null;
     }
-    return null;
+    this.users[index] = { ...this.users[index], ...fieldsToUpdate };
+    return this.users[index];
   }
 }
 
