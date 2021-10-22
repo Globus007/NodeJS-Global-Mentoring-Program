@@ -2,7 +2,11 @@
   "name": "nodejs-global-mentoring-program",
   "version": "1.0.0",
   "description": "NodeJS Global Mentoring Program 2021",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
+    "start": "node dist/index.js",
     "build": "tsc",
     "dev": "nodemon --config nodemon.json src/app.ts"
   },
