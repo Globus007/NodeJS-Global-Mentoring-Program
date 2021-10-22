@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "NodeJS Global Mentoring Program 2021",
   "engines": {
-    "node": "14.x"
+    "node": "14.x",
+    "npm": "6.x"
   },
   "scripts": {
     "start": "node dist/index.js",
@@ -32,6 +33,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "joi": "^17.4.2"
+    "joi": "^17.4.2",
+    "typescript": "^4.4.4"
   }
 }
