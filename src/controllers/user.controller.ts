@@ -1,6 +1,6 @@
-import { memoryUserService, UserService } from '../services';
+import { memoryUserService } from '../services';
 import { Request, Response } from 'express';
-import { User } from '../types';
+import { User, UserService } from '../types';
 import { UserSchema } from '../schemas/user.schema';
 
 class UserController {
@@ -10,36 +10,31 @@ class UserController {
     this.userService = userService;
   }
 
-  async getUsers(req: Request, res: Response): Promise<Response> {
-    const { id, loginSubstring, limit } = req.query;
-    console.log('getUsers:', { id }, { loginSubstring }, { limit });
+  getUsers(req: Request, res: Response): void {
+    const { loginSubstring, limit } = req.query;
+    console.log('getUsers:', { loginSubstring }, { limit });
 
-    if (id !== undefined) {
-      const user = this.userService.getUserById(String(id));
+    const users = loginSubstring
+      ? this.userService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
+      : this.userService.getAllUsers();
 
-      if (user) {
-        console.log('getUserById:', { user });
-        return res.status(200).send(user);
-      }
-      console.log('getUserById:', `user with id ${id} not found`);
-      return res.sendStatus(404);
-    }
-
-    if (loginSubstring !== undefined) {
-      const users =
-        limit !== undefined
-          ? this.userService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
-          : this.userService.getAutoSuggestUsers(String(loginSubstring));
-      console.log('getAutoSuggestUsers:', { users });
-      return res.status(200).send(users);
-    }
-
-    const users = this.userService.getAllUsers();
-    console.log('getAllUsers:', { users });
+    console.log('getAutoSuggestUsers:', { users });
     res.status(200).send(users);
   }
 
-  async createUser(req: Request, res: Response): Promise<Response> {
+  getUserById(req: Request, res: Response): Response {
+    const { id } = req.params;
+    const user = this.userService.getUserById(String(id));
+
+    if (user) {
+      console.log('getUserById:', { user });
+      return res.status(200).send(user);
+    }
+    console.log('getUserById:', `user with id ${id} not found`);
+    res.sendStatus(404);
+  }
+
+  createUser(req: Request, res: Response): Response {
     const user: User = req.body;
     console.log('createUser:', { user });
 
@@ -54,7 +49,7 @@ class UserController {
     res.status(201).send(newUser);
   }
 
-  async deleteUser(req: Request, res: Response): Promise<Response> {
+  deleteUser(req: Request, res: Response): Response {
     const { id } = req.query;
     console.log('deleteUser:', { id });
 
@@ -67,7 +62,7 @@ class UserController {
     res.sendStatus(404);
   }
 
-  async updateUser(req: Request, res: Response): Promise<Response> {
+  updateUser(req: Request, res: Response): Response {
     const fieldToUpdate: Partial<User> = req.body;
     const { id } = req.query;
     console.log('updateUser:', { id }, { fieldToUpdate });
