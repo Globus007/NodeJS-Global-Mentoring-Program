@@ -1,7 +1,6 @@
 import { memoryUserService } from '../services';
 import { Request, Response } from 'express';
 import { User, UserService } from '../types';
-import { UserSchema } from '../schemas/user.schema';
 
 class UserController {
   private readonly userService: UserService;
@@ -30,15 +29,11 @@ class UserController {
     res.sendStatus(404);
   }
 
-  createUser(req: Request, res: Response): Response {
+  createUser(req: Request, res: Response): void {
     const user: User = req.body;
 
-    const { error } = UserSchema.validate(user);
-    if (error) {
-      return res.status(400).send(error.message);
-    }
-
     const newUser = this.userService.createUser(user);
+
     res.status(201).send(newUser);
   }
 
@@ -55,11 +50,6 @@ class UserController {
   updateUser(req: Request, res: Response): Response {
     const fieldToUpdate: Partial<User> = req.body;
     const { id } = req.query;
-
-    const { error } = UserSchema.validate(fieldToUpdate);
-    if (error) {
-      return res.status(400).send(error.message);
-    }
 
     const user = this.userService.updateUser(String(id), fieldToUpdate);
     if (user) {
