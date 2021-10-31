@@ -1,11 +1,7 @@
 import { User, UserService } from '../types';
 
 class MemoryUserService implements UserService {
-  private readonly users: User[];
-
-  constructor() {
-    this.users = [];
-  }
+  private readonly users: User[] = [];
 
   getAllUsers(): User[] {
     return this.users.filter((user) => !user.isDeleted);
