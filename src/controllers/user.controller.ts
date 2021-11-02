@@ -9,19 +9,19 @@ class UserController {
     this.userService = userService;
   }
 
-  getUsers(req: Request, res: Response): void {
+  async getUsers(req: Request, res: Response): Promise<void> {
     const { loginSubstring, limit } = req.query;
 
     const users = loginSubstring
-      ? this.userService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
-      : this.userService.getAllUsers();
+      ? await this.userService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
+      : await this.userService.getAllUsers();
 
     res.status(200).send(users);
   }
 
-  getUserById(req: Request, res: Response): Response {
+  async getUserById(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const user = this.userService.getUserById(String(id));
+    const user = await this.userService.getUserById(String(id));
 
     if (user) {
       return res.status(200).send(user);
@@ -29,33 +29,30 @@ class UserController {
     res.sendStatus(404);
   }
 
-  createUser(req: Request, res: Response): void {
+  async createUser(req: Request, res: Response): Promise<void> {
     const user: User = req.body;
-
-    const newUser = this.userService.createUser(user);
-
+    const newUser = await this.userService.createUser(user);
     res.status(201).send(newUser);
   }
 
-  deleteUser(req: Request, res: Response): Response {
+  async deleteUser(req: Request, res: Response): Promise<Response> {
     const { id } = req.query;
+    const isDeleted = await this.userService.deleteUser(String(id));
 
-    if (this.userService.deleteUser(String(id))) {
+    if (isDeleted) {
       return res.sendStatus(204);
     }
-
     res.sendStatus(404);
   }
 
-  updateUser(req: Request, res: Response): Response {
+  async updateUser(req: Request, res: Response): Promise<Response> {
     const fieldToUpdate: Partial<User> = req.body;
     const { id } = req.query;
+    const user = await this.userService.updateUser(String(id), fieldToUpdate);
 
-    const user = this.userService.updateUser(String(id), fieldToUpdate);
     if (user) {
       return res.status(200).send(user);
     }
-
     res.sendStatus(404);
   }
 }
