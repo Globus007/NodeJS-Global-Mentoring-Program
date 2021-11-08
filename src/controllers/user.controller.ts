@@ -1,60 +1,61 @@
-import { memoryUserService } from '../services';
 import { Request, Response } from 'express';
-import { User, UserService } from '../types';
+import { User } from '../types';
+import { dbUserService } from '../services/db.user.service';
+import { UserCreationAttributes } from '../models/user.model';
 
 class UserController {
-  private readonly userService: UserService;
-
-  constructor(userService: UserService) {
-    this.userService = userService;
-  }
-
   async getUsers(req: Request, res: Response): Promise<void> {
     const { loginSubstring, limit } = req.query;
-
-    const users = loginSubstring
-      ? await this.userService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
-      : await this.userService.getAllUsers();
-
-    res.status(200).send(users);
+    try {
+      const users = loginSubstring
+        ? await dbUserService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
+        : await dbUserService.getAllUsers();
+      res.status(200).send(users);
+    } catch (e) {
+      res.status(500).send(e);
+    }
   }
 
-  async getUserById(req: Request, res: Response): Promise<Response> {
+  async getUserById(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
-    const user = await this.userService.getUserById(String(id));
-
-    if (user) {
-      return res.status(200).send(user);
+    try {
+      const user = await dbUserService.getUserById(String(id));
+      res.status(200).send(user);
+    } catch (e) {
+      res.status(500).send(e);
     }
-    res.sendStatus(404);
   }
 
   async createUser(req: Request, res: Response): Promise<void> {
-    const user: User = req.body;
-    const newUser = await this.userService.createUser(user);
-    res.status(201).send(newUser);
+    const user: UserCreationAttributes = req.body;
+    try {
+      const newUser = await dbUserService.createUser(user);
+      res.status(201).send(newUser);
+    } catch (e) {
+      res.status(500).send(e);
+    }
   }
 
-  async deleteUser(req: Request, res: Response): Promise<Response> {
+  async deleteUser(req: Request, res: Response): Promise<void> {
     const { id } = req.query;
-    const isDeleted = await this.userService.deleteUser(String(id));
-
-    if (isDeleted) {
-      return res.sendStatus(204);
+    try {
+      await dbUserService.deleteUser(String(id));
+      res.sendStatus(204);
+    } catch (e) {
+      res.status(500).send(e);
     }
-    res.sendStatus(404);
   }
 
   async updateUser(req: Request, res: Response): Promise<Response> {
     const fieldToUpdate: Partial<User> = req.body;
     const { id } = req.query;
-    const user = await this.userService.updateUser(String(id), fieldToUpdate);
-
-    if (user) {
+    try {
+      const user = await dbUserService.updateUser(String(id), fieldToUpdate);
       return res.status(200).send(user);
+    } catch (e) {
+      res.status(500).send(e);
     }
-    res.sendStatus(404);
   }
 }
 
-export const userController = new UserController(memoryUserService);
+export const userController = new UserController();
