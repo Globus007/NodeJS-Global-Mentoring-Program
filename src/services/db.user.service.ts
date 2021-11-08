@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 import { User } from '../types';
 import { UserCreationAttributes, Users } from '../models/user.model';
+import { UserNotFoundError } from '../types/errors';
 
 class DbUserService {
   async createUser(user: UserCreationAttributes): Promise<User> {
@@ -14,8 +15,7 @@ class DbUserService {
   async getUserById(id: string): Promise<User> {
     const user = Users.findOne({ where: { id, isDeleted: false } });
     if (!user) {
-      // @TODO throw custom error
-      throw new Error('user not found');
+      throw new UserNotFoundError(id);
     }
     return user;
   }
