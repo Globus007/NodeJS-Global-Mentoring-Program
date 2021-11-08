@@ -1,12 +1,7 @@
-import { User } from '../types';
-import { UserService } from './user.service';
+import { User, UserService } from '../types';
 
 class MemoryUserService implements UserService {
-  private readonly users: User[];
-
-  constructor() {
-    this.users = [];
-  }
+  private readonly users: User[] = [];
 
   getAllUsers(): User[] {
     return this.users.filter((user) => !user.isDeleted);
@@ -17,12 +12,11 @@ class MemoryUserService implements UserService {
   }
 
   getAutoSuggestUsers(loginSubstring: string, limit?: number): User[] {
-    const filteredUsers = this.users
-      .filter((user) => !user.isDeleted)
+    const filteredUsers = this.getAllUsers()
       .sort((a, b) => a.login.localeCompare(b.login))
       .filter((user) => user.login.includes(loginSubstring));
 
-    return limit !== undefined ? filteredUsers.slice(0, limit) : filteredUsers;
+    return limit ? filteredUsers.slice(0, limit) : filteredUsers;
   }
 
   createUser(user: User): User {
