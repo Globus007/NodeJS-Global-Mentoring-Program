@@ -13,7 +13,7 @@ class DbUserService {
   }
 
   async getUserById(id: string): Promise<User> {
-    const user = Users.findOne({ where: { id, isDeleted: false } });
+    const user = await Users.findOne({ where: { id, isDeleted: false } });
     if (!user) {
       throw new UserNotFoundError(id);
     }
