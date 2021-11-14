@@ -1,10 +1,11 @@
 import { DataTypes, Model, Optional } from 'sequelize';
-import { User } from '../types';
 import { sequelizeConnection } from '../config';
+import { User } from '../types';
+import { encryptUserPassword } from '../utils';
 
 export type UserCreationAttributes = Optional<User, 'id' | 'isDeleted'>;
 
-export class Users extends Model<User, UserCreationAttributes> implements User {
+export class UserModel extends Model<User, UserCreationAttributes> implements User {
   id: string;
   login: string;
   password: string;
@@ -12,7 +13,7 @@ export class Users extends Model<User, UserCreationAttributes> implements User {
   isDeleted: boolean;
 }
 
-Users.init(
+UserModel.init(
   {
     id: {
       allowNull: false,
@@ -35,10 +36,14 @@ Users.init(
       type: DataTypes.INTEGER,
     },
     isDeleted: {
+      field: 'deleted',
       allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
   },
-  { timestamps: false, sequelize: sequelizeConnection, paranoid: true },
+  { timestamps: false, sequelize: sequelizeConnection, paranoid: true, tableName: 'users' },
 );
+
+UserModel.beforeCreate(encryptUserPassword);
+UserModel.beforeUpdate(encryptUserPassword);
