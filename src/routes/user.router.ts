@@ -1,9 +1,9 @@
 import { json, Router } from 'express';
 import { createValidator } from 'express-joi-validation';
 import { UserSchema } from '../schemas';
-import { dbUserService } from '../services/db.user.service';
+import { dbUserService } from '../services';
 import { User, UserNotFoundError } from '../types';
-import { UserCreationAttributes } from '../models';
+import { UserCreationAttributes } from '../db/models';
 
 export const userRouter = Router();
 const validator = createValidator({});
@@ -12,8 +12,8 @@ userRouter.get('/', async (req, res) => {
   const { loginSubstring, limit } = req.query;
   try {
     const users = loginSubstring
-      ? await dbUserService.getAutoSuggestUsers(String(loginSubstring), Number(limit))
-      : await dbUserService.getAllUsers();
+      ? await dbUserService.getAutoSuggestUsersDBOWithoutPassword(String(loginSubstring), Number(limit))
+      : await dbUserService.getAllUsersDBOWithoutPassword();
     res.status(200).send(users);
   } catch (e) {
     res.status(500).send(e.message);
@@ -23,7 +23,7 @@ userRouter.get('/', async (req, res) => {
 userRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await dbUserService.getUserById(String(id));
+    const user = await dbUserService.getUserDBOWithoutPasswordById(String(id));
     res.status(200).send(user);
   } catch (e) {
     if (e instanceof UserNotFoundError) {

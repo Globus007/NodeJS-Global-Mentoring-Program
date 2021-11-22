@@ -1,7 +1,7 @@
 import { json, Router } from 'express';
 import { groupService } from '../services';
 import { Group, GroupNotFoundError } from '../types';
-import { GroupCreationAttributes } from '../models';
+import { GroupCreationAttributes } from '../db/models';
 import { createValidator } from 'express-joi-validation';
 import { GroupSchema } from '../schemas';
 

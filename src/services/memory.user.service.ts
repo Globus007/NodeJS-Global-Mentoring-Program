@@ -1,4 +1,24 @@
-import { User, UserService } from '../types';
+interface UserService {
+  getAllUsers(): User[];
+
+  getUserById(id: string): User;
+
+  getAutoSuggestUsers(loginSubstring: string, limit?: number): User[];
+
+  createUser(user: User): User;
+
+  deleteUser(id: string): boolean;
+
+  updateUser(id: string, fieldsToUpdate: Partial<User>): User;
+}
+
+type User = {
+  id: string;
+  login: string;
+  password: string;
+  age: number;
+  isDeleted: boolean;
+};
 
 class MemoryUserService implements UserService {
   private readonly users: User[] = [];

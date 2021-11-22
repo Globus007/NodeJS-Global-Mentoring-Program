@@ -1,4 +1,4 @@
-import { GroupCreationAttributes, GroupModel } from '../models';
+import { GroupCreationAttributes, GroupModel } from '../db/models';
 import { Group, GroupNotFoundError } from '../types';
 
 class GroupService {

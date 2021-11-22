@@ -9,7 +9,11 @@
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
-    "dev": "nodemon --config nodemon.json src/app.ts"
+    "dev": "nodemon --config nodemon.json src/app.ts",
+    "migrate up": "node src/db/migrate up",
+    "migrate down": "node src/db/migrate down",
+    "seed up": "node src/db/seed up",
+    "seed down": "node src/db/seed down"
   },
   "repository": {
     "type": "git",
@@ -29,7 +33,8 @@
     "nodemon": "^2.0.13",
     "prettier": "^2.4.1",
     "ts-node": "^10.3.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "umzug": "^3.0.0-beta.16"
   },
   "dependencies": {
     "cors": "^2.8.5",
