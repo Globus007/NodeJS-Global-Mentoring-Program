@@ -8,7 +8,6 @@ const validator = createValidator({});
 
 userGroupRouter.post('/', json(), validator.body(UserGroupSchema), async (req, res) => {
   try {
-    console.log(req.body);
     const { groupId, userIds } = req.body;
     await addUsersToGroup(groupId, userIds);
     res.sendStatus(201);

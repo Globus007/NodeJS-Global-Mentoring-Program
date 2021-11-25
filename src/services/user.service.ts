@@ -59,4 +59,4 @@ class UserService {
   }
 }
 
-export const dbUserService = new UserService();
+export const userService = new UserService();

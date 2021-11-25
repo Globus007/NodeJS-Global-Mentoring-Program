@@ -1,19 +1,21 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Seeder } from '../umzug';
+import { getCurrentTimestamp } from '../../utils';
 
 const seedGroups = [
   {
-    id: '7c104e6a-a8b5-4689-8b28-707772c1f6fe',
+    id: uuidv4(),
     name: 'user',
     permissions: ['READ', 'SHARE', 'UPLOAD_FILES'],
-    createdAt: '2021-11-20T17:25:19.081Z',
-    updatedAt: '2021-11-20T17:25:19.081Z',
+    createdAt: getCurrentTimestamp(),
+    updatedAt: getCurrentTimestamp(),
   },
   {
-    id: '24e8c160-bfd6-42a5-8498-385e28e81926',
+    id: uuidv4(),
     name: 'admin',
     permissions: ['WRITE', 'READ', 'DELETE'],
-    createdAt: '2021-11-20T17:25:19.081Z',
-    updatedAt: '2021-11-20T17:25:19.081Z',
+    createdAt: getCurrentTimestamp(),
+    updatedAt: getCurrentTimestamp(),
   },
 ];
 
