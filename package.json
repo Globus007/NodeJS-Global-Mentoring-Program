@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "build": "tsc",
-    "dev": "nodemon --config nodemon.json src/app.ts",
+    "dev": "NODE_ENV=development nodemon --config nodemon.json src/app.ts",
     "migrate up": "node src/db/migrate up",
     "migrate down": "node src/db/migrate down",
     "seed up": "node src/db/seed up",
@@ -48,6 +48,7 @@
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.9.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
   }
 }
