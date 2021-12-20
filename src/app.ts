@@ -1,18 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import { HOSTNAME, PORT } from './config';
-import { groupRouter, userGroupRouter, userRouter } from './routes';
+import { groupRouter, loginRouter, userGroupRouter, userRouter } from './routes';
+import { checkToken, errorHandlerMiddleware, loggerMiddleware } from './middlewares';
 import { Logger } from './components';
-import { errorHandlerMiddleware, loggerMiddleware } from './middlewares';
 import { HttpStatusCode } from './types';
 
 const app = express();
 app.use(cors());
 app.use(loggerMiddleware);
 
-app.use('/user/', userRouter);
-app.use('/group/', groupRouter);
-app.use('/user-group/', userGroupRouter);
+app.use('/login/', loginRouter);
+app.use('/user/', checkToken, userRouter);
+app.use('/group/', checkToken, groupRouter);
+app.use('/user-group/', checkToken, userGroupRouter);
 app.use(errorHandlerMiddleware);
 
 app.get('*', (req, res) => {

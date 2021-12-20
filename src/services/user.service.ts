@@ -22,7 +22,15 @@ class UserService {
   async getUserById(id: string, options: FindOptions = {}): Promise<User> {
     const user = await UserModel.findByPk(id, options);
     if (!user) {
-      throw new UserNotFoundError(id);
+      throw new UserNotFoundError(`User with id ${id} not found`);
+    }
+    return user;
+  }
+
+  async getUserByLogin(login: string): Promise<User> {
+    const user = await UserModel.findOne({ where: { login } });
+    if (!user) {
+      throw new UserNotFoundError(`User with login ${login} not found`);
     }
     return user;
   }
