@@ -2,8 +2,10 @@ import { Op } from 'sequelize';
 import { removePassword, UserCreationAttributes, UserModel } from '../db/models';
 import { User, UserDBOWithoutPassword, UserNotFoundError } from '../types';
 import { FindOptions } from 'sequelize/types/lib/model';
+import { trackTime } from '../decorators';
 
 class UserService {
+  @trackTime
   async createUser(user: UserCreationAttributes): Promise<User> {
     return UserModel.create(user);
   }
@@ -12,6 +14,7 @@ class UserService {
     return UserModel.findAll(options);
   }
 
+  @trackTime
   async getAllUsersDBOWithoutPassword(): Promise<UserDBOWithoutPassword[]> {
     return this.getAllUsers(removePassword);
   }
@@ -19,20 +22,31 @@ class UserService {
   async getUserById(id: string, options: FindOptions = {}): Promise<User> {
     const user = await UserModel.findByPk(id, options);
     if (!user) {
-      throw new UserNotFoundError(id);
+      throw new UserNotFoundError(`User with id ${id} not found`);
     }
     return user;
   }
 
+  async getUserByLogin(login: string): Promise<User> {
+    const user = await UserModel.findOne({ where: { login } });
+    if (!user) {
+      throw new UserNotFoundError(`User with login ${login} not found`);
+    }
+    return user;
+  }
+
+  @trackTime
   async getUserDBOWithoutPasswordById(id: string): Promise<UserDBOWithoutPassword> {
     return this.getUserById(id, removePassword);
   }
 
+  @trackTime
   async deleteUser(id: string): Promise<void> {
     const user = await this.getUserById(id);
     return (user as UserModel).destroy();
   }
 
+  @trackTime
   async updateUser(id: string, fieldsToUpdate: Partial<User>): Promise<User> {
     const user = await this.getUserById(id);
     return (user as UserModel).update(fieldsToUpdate);
@@ -51,6 +65,7 @@ class UserService {
     return UserModel.findAll({ ...findOptions, ...options });
   }
 
+  @trackTime
   async getAutoSuggestUsersDBOWithoutPassword(
     loginSubstring: string,
     limit?: number,
