@@ -6,7 +6,7 @@ import { authorizationMiddleware, errorHandlerMiddleware, loggerMiddleware } fro
 import { Logger } from './components';
 import { HttpStatusCode } from './types';
 
-const app = express();
+export const app = express();
 app.use(cors());
 app.use(loggerMiddleware);
 app.use(authorizationMiddleware);
@@ -21,7 +21,7 @@ app.get('*', (req, res) => {
   res.sendStatus(HttpStatusCode.NOT_FOUND);
 });
 
-app.listen(PORT, () => {
+export const server = app.listen(PORT, () => {
   Logger.debug(`Running at ${HOSTNAME}:${PORT}`);
 });
 
