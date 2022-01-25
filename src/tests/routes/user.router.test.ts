@@ -33,7 +33,7 @@ describe('POST /user', () => {
     expect(serializeMock).not.toBeCalled();
   });
 
-  test('empty body should fall with validation error', async () => {
+  test('should send status code 201 and return created user', async () => {
     const response = await request(app).post('/user').set('x-access-token', 'token').send(mockUsers[0]);
     expect(response.statusCode).toBe(201);
     expect(serializeMock).toBeCalled();

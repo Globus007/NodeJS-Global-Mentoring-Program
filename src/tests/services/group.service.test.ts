@@ -7,42 +7,53 @@ const testGroup: GroupCreationAttributes = {
   permissions: [],
 };
 
-test('getAllGroups should work correct', async () => {
-  const groups = await groupService.getAllGroups();
-  expect(groups.length).toBe(2);
+const INITIAL_GROUPS_LENGTH = 2;
+const INCORRECT_GROUP_ID = 'wrongId';
+
+describe('getAllGroups', () => {
+  test('should return all groups', async () => {
+    const groups = await groupService.getAllGroups();
+    expect(groups.length).toBe(INITIAL_GROUPS_LENGTH);
+  });
 });
 
 describe('createGroup, deleteGroup, getGroupById', () => {
   let addedGroup: Group;
 
-  test('createUser should work correct', async () => {
-    addedGroup = await groupService.createGroup(testGroup);
-    const groups = await groupService.getAllGroups();
-
-    expect(addedGroup.name).toBe(testGroup.name);
-    expect(groups.length).toBe(3);
+  describe('createGroup', () => {
+    test('should create group', async () => {
+      addedGroup = await groupService.createGroup(testGroup);
+      const groups = await groupService.getAllGroups();
+      expect(addedGroup.name).toBe(testGroup.name);
+      expect(groups.length).toBe(INITIAL_GROUPS_LENGTH + 1);
+    });
   });
 
-  test('getGroupById should work correct', async () => {
-    const receivedGroup = await groupService.getGroupById(addedGroup.id);
-    expect(receivedGroup.name).toBe(addedGroup.name);
+  describe('getGroupById', () => {
+    test('should return group by id', async () => {
+      const receivedGroup = await groupService.getGroupById(addedGroup.id);
+      expect(receivedGroup.name).toBe(addedGroup.name);
+    });
+
+    test('should trow error when id incorrect', async () => {
+      await expect(() => groupService.getGroupById(INCORRECT_GROUP_ID)).rejects.toThrow();
+    });
   });
 
-  test('getGroupById should trow error when id incorrect', async () => {
-    await expect(() => groupService.getGroupById('wrongId')).rejects.toThrow();
+  describe('updateGroup', () => {
+    test('should update group with new name', async () => {
+      const newName = { name: 'newName' };
+      await groupService.updateGroup(addedGroup.id, newName);
+      const receivedGroup = await groupService.getGroupById(addedGroup.id);
+      expect(receivedGroup.name).toEqual(newName.name);
+    });
   });
 
-  test('updateGroup should work correct', async () => {
-    const newName = { name: 'newName' };
-    await groupService.updateGroup(addedGroup.id, newName);
-    const receivedGroup = await groupService.getGroupById(addedGroup.id);
-    expect(receivedGroup.name).toEqual(newName.name);
-  });
-
-  test('deleteUser should work correct', async () => {
-    await groupService.deleteGroup(addedGroup.id);
-
-    const groups = await groupService.getAllGroups();
-    expect(groups.length).toBe(2);
+  describe('deleteUser', () => {
+    test('should delete user', async () => {
+      await groupService.deleteGroup(addedGroup.id);
+      const groups = await groupService.getAllGroups();
+      expect(groups.length).toBe(INITIAL_GROUPS_LENGTH);
+    });
   });
 });
