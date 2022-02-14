@@ -5,7 +5,7 @@ import { AuthorizationError, HttpStatusCode } from '../types';
 import { JWT_SECRET } from '../config';
 import { Logger } from '../components';
 
-const verifyJWT = promisify<string, string>(jsonwebtoken.verify);
+export const verifyJWT = promisify<string, string>(jsonwebtoken.verify);
 
 export const authorizationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (req.originalUrl.startsWith('/login')) {
